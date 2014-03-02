@@ -1,0 +1,43 @@
+Insurance customer similarities
+=====================================
+
+User based similarities to show infromation to new customers.
+
+Based on (in order of priority):
+
+- Trade (though only landlord at the beggining)
+- Post code. First part of postcode. or all of it.
+- Type of property
+- Year of built.
+- Type of tenant.
+- number of bedrooms.
+- Insurer
+
+
+We assign Ids to each of these items:
+
+So
+
+Trade: 1
+Post Code: 2
+Type of Property: 3
+Year of Built: 4
+Type of tenant: 5
+Number of bedrooms: 6
+
+Each user will have an id as well. given by our system.
+
+
+We will calculate the distance between every 2 post codes and then give wieghts to them to know which hare the nearest people.
+
+Should we cluster user in trades adn post codes.
+
+When we want boolean item values, we will put a value that ends in 153 (I made up this number). This means for values that if they are different they are different. there isn o notion of any two values being closer or farther fro meach other.
+
+
+Example mongo documents:
+
+{ "user_id" : 1,
+  "item_id" : 1,
+  "preference" : 1
+  }
