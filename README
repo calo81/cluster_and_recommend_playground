@@ -16,6 +16,15 @@ Based on (in order of priority):
 - Insurer
 
 
+The ones we will use: (Trades)
+
+- Trade 
+- Post code
+- Size of business.
+- Year start business.
+
+
+
 We assign Ids to each of these items:
 
 So
