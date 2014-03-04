@@ -25,10 +25,7 @@ import org.apache.mahout.utils.clustering.ClusterDumper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class CreateSequenceFile {
 
@@ -36,54 +33,54 @@ public class CreateSequenceFile {
      * (trade, postcode, size_of_business, years_start_business)
      */
     public static final double[][] points = {
-            {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1},
-            {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1},
-            {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1},
-            {3, 4, 5, 6}, {7, 8, 9, 10}, {1, 1, 1, 1},{1,2,1,2},
-            {1,1,3,2},
-            {1,3,2,2},
-            {1,3,1,1},
-            {3,1,2,1},
-            {3,1,1,3},
-            {2,1,1,1},
-            {2,1,1,2},
-            {1,2,1,3},
-            {2,1,3,1},
-            {1,1,1,3},
-            {3,1,1,3},
-            {1,2,1,3},
-            {2,1,3,3},
-            {1,2,1,1},
-            {1,3,1,3},
-            {2,3,1,1},
-            {1,3,1,1},
-            {1,1,3,3},
-            {2,1,2,2},
-            {1,1,1,1},
-            {1,1,2,3},
-            {2,1,1,2},
-            {2,1,1,3},
-            {1,1,1,1},
-            {1,2,3,3},
-            {2,1,1,1},
-            {1,3,2,3},
-            {2,2,3,2},
-            {2,1,1,2},
-            {2,3,1,1},
-            {1,3,1,1},
-            {3,3,1,3},
-            {2,1,2,1},
-            {1,2,3,3},
-            {1,1,1,1},
-            {1,2,1,2},
-            {1,1,1,2},
-            {1,1,3,1},
-            {1,1,1,1},
-            {1,1,2,3},
-            {1,2,1,3},
-            {2,1,1,2}};
+            {1, 1, 3, 1}, {1, 1, 1, 1}, {1, 1, 1, 3}};
+//            {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1},
+//            {1, 1, 1, 1}, {1, 1, 1, 1}, {1, 1, 1, 1},
+//            {3, 4, 5, 6}, {7, 8, 9, 10}, {1, 1, 1, 1}, {1, 2, 1, 2},
+//            {1, 1, 3, 2},
+//            {1, 3, 2, 2},
+//            {1, 3, 1, 1},
+//            {3, 1, 2, 1},
+//            {3, 1, 1, 3},
+//            {2, 1, 1, 1},
+//            {2, 1, 1, 2},
+//            {1, 2, 1, 3},
+//            {2, 1, 3, 1},
+//            {1, 1, 1, 3},
+//            {3, 1, 1, 3},
+//            {1, 2, 1, 3},
+//            {2, 1, 3, 3},
+//            {1, 2, 1, 1},
+//            {1, 3, 1, 3},
+//            {2, 3, 1, 1},
+//            {1, 3, 1, 1},
+//            {1, 1, 3, 3},
+//            {2, 1, 2, 2},
+//            {1, 1, 1, 1},
+//            {1, 1, 2, 3},
+//            {2, 1, 1, 2},
+//            {2, 1, 1, 3},
+//            {1, 1, 1, 1},
+//            {1, 2, 3, 3},
+//            {2, 1, 1, 1},
+//            {1, 3, 2, 3},
+//            {2, 2, 3, 2},
+//            {2, 1, 1, 2},
+//            {2, 3, 1, 1},
+//            {1, 3, 1, 1},
+//            {3, 3, 1, 3},
+//            {2, 1, 2, 1},
+//            {1, 2, 3, 3},
+//            {1, 1, 1, 1},
+//            {1, 2, 1, 2},
+//            {1, 1, 1, 2},
+//            {1, 1, 3, 1},
+//            {1, 1, 1, 1},
+//            {1, 1, 2, 3},
+//            {1, 2, 1, 3},
+//            {2, 1, 1, 2}};
 
-    public static final double[] weight = {10, 5, 1, 1};
+    public static final double[] weight = {1000, 100, 1, 1};
 
     public static void writePointsToFile(List<Vector> points,
                                          String fileName,
@@ -107,7 +104,7 @@ public class CreateSequenceFile {
             double[] fr = raw[i];
             NamedVector vec = new NamedVector(
                     new RandomAccessSparseVector(fr.length),
-                    "NAME"+i
+                    "NAME" + i
             );
             vec.assign(fr);
             points.add(vec);
@@ -117,7 +114,7 @@ public class CreateSequenceFile {
 
     public static void run() throws Exception {
 
-        int k = 8;
+        int k = 2;
 
         List<Vector> vectors = getPoints(points);
 
@@ -140,19 +137,17 @@ public class CreateSequenceFile {
         SequenceFile.Writer writer = new SequenceFile.Writer(fs, conf, path, Text.class, Kluster.class);
 
 
-      // adding weights
+        // adding weights
 
         WeightedDistanceMeasure distanceMeasure = new WeightedEuclideanDistanceMeasure();
-        NamedVector weightvector = new NamedVector(
-                new RandomAccessSparseVector(weight.length),
-                "weight"
-        );
+        Vector weightvector =
+                new RandomAccessSparseVector(weight.length);
         weightvector.assign(weight);
 
         distanceMeasure.setWeights(weightvector);
 
 
-       // ---------
+        // ---------
 
 
         for (int i = 0; i < k; i++) {
@@ -172,37 +167,29 @@ public class CreateSequenceFile {
                 0,
                 true);
 
-        SequenceFile.Reader reader = new SequenceFile.Reader(fs,
-                new Path("clustering/output/" + Cluster.CLUSTERED_POINTS_DIR + "/part-m-0"), conf);
-
-        IntWritable key = new IntWritable();
-        WeightedPropertyVectorWritable value = new WeightedPropertyVectorWritable();
-        while (reader.next(key, value)) {
-            NamedVector nVec = (NamedVector)value.getVector();
-            System.out.println("ID: "+nVec+ "  "+value.toString() + " belongs to cluster " + key.toString());
-        }
-        reader.close();
-
 
         ClusterDumper clusterDumper = new ClusterDumper(new Path("clustering/output",
                 "clusters-3-final"), new Path("clustering/output/" + Cluster.CLUSTERED_POINTS_DIR + "/part-m-0"));
         clusterDumper.printClusters(null);
 
-        Iterable<ClusterWritable>  clusterWritable = new SequenceFileDirValueIterable<ClusterWritable>(new Path("clustering/output/clusters-10-final",
-               "part-*"), PathType.GLOB, conf);
+        Iterable<ClusterWritable> clusterWritable = new SequenceFileDirValueIterable<ClusterWritable>(new Path("clustering/output/clusters-2-final",
+                "part-*"), PathType.GLOB, conf);
 
 
         Map<Integer, Vector> centers = new HashMap<>();
-        for(ClusterWritable writable: clusterWritable){
+        for (ClusterWritable writable : clusterWritable) {
             Cluster cluster = writable.getValue();
-            System.out.println(cluster.getCenter());
+            System.out.println(cluster.getId() + " " + cluster.getCenter());
             centers.put(cluster.getId(), cluster.getCenter());
+
         }
 
 
         // Find cluster for new point:
 
-        double[] newPoint={3,4,5,6};
+        double[] newPoint = {1, 3, 1, 1};
+        System.out.println("New point: " + Arrays.toString(newPoint));
+
         NamedVector newPointVector = new NamedVector(
                 new RandomAccessSparseVector(newPoint.length),
                 "weight"
@@ -211,19 +198,39 @@ public class CreateSequenceFile {
 
         double currentMinDistance = 10;
         int clusterIdBelong = 0;
-        for(Integer vecKey:centers.keySet()){
+        for (Integer vecKey : centers.keySet()) {
             Vector vector = centers.get(vecKey);
-            double distance = distanceMeasure.distance(vector, newPointVector);
-            if(distance<currentMinDistance){
+            //double distance = distanceMeasure.distance(newPointVector, vector);
+            double distance = vector.getDistanceSquared(newPointVector);
+            System.out.println("Distance for " + vecKey + " is" + distance);
+            if (distance < currentMinDistance) {
                 clusterIdBelong = vecKey;
                 currentMinDistance = distance;
             }
         }
 
-        System.out.println("New point belongs to cluster" +clusterIdBelong+ " with a distance of "+ currentMinDistance);
+        System.out.println("New point belongs to cluster" + clusterIdBelong + " with a distance of " + currentMinDistance);
 
 
         // ---------------
+
+        // Now find all elements of that cluster:
+
+        SequenceFile.Reader reader = new SequenceFile.Reader(fs,
+                new Path("clustering/output/" + Cluster.CLUSTERED_POINTS_DIR + "/part-m-0"), conf);
+
+        IntWritable key = new IntWritable();
+        WeightedPropertyVectorWritable value = new WeightedPropertyVectorWritable();
+        while (reader.next(key, value)) {
+            NamedVector nVec = (NamedVector) value.getVector();
+            //if (String.valueOf(clusterIdBelong).equals(key.toString())) {
+                System.out.println("ID: " + nVec + "  " + value.toString() + " belongs to cluster " + key.toString());
+            //}
+        }
+        reader.close();
+
+
+        // -------------
 
     }
 
